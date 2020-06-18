@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block contenttitle %}교통 차트{% endblock %}
+{% block title %}교통 차트{% endblock %}
+
+{% block head %}
+<style>
+canvas[data-class]{
+    width:600px;
+    height:427px;
+}
+.hanglue{
+    font-family:'Malgun Gothic';
+    font-size:15pt;
+    font-weight:bold;
+}
+.item_none{
+    height:80px;
+    margin-left:20px;
+    height:40px;
+}
+
+
+
+label[for=eyes_01], label[for=eyes_02], label[for=nose_01], label[for=nose_02], label[for=mouth_01], label[for=mouth_02] {
+    margin-left:20px;
+    height:inherit;
+}
+.eyes_01{
+    width:100px;
+    height:40px;
+}
+.eyes_02{
+    width:50px;
+    height:40px;
+}
+.nose_01{
+    width:30px;
+    height:50px;
+}
+.nose_02{
+    width:30px;
+    height:30px;
+}
+.mouth_01{
+    width:50px;
+    height:30px;
+}
+.mouth_02{
+    width:60px;
+    height:30px;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="row clearfix">
+                <!-- Line Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">등록 자동차수</div>
+                        </div>
+                        <div class="body">
+                             <canvas id="traffic-chart" data-url="{% url 'chart:traffic-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Line Chart -->
+                <!-- Bar Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">주차장수</div>
+                        </div>
+                        <div class="body">
+                             <canvas id="parking-chart" data-url="{% url 'chart:parking-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Bar Chart -->
+            </div>
+
+            <div class="row clearfix">
+                <!-- Radar Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">통근,통학 이용 비율</div>
+                        </div>
+                        <div class="body">
+                            <canvas id="commute-chart" data-url="{% url 'chart:commute-chart' %}" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Radar Chart -->
+                <!-- Pie Chart -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="hanglue">미정</div>
+                        </div>
+                        <div class="body">
+                            <canvas id="pie_chart" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Pie Chart -->
+            </div>
+
+
+
+{% csrf_token %}
+{% endblock %}
+ 
+{% block script %}
+
+  <div id="container" style="width: 75%;">
+{#    <canvas id="population-chart" data-url="{% url 'chart:population-chart' %}"></canvas>#}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+  {# traffic  #}
+    $(function trafficChart() {
+
+      var $trafficChart = $("#traffic-chart");
+      $.ajax({
+        url: $trafficChart.data("url"),
+        success: function (data) {
+          var ctx = $trafficChart[0].getContext("2d");
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: '등록 자동차 수',
+                backgroundColor: "rgb(255, 99, 132)",
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Traffic Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+    {#  parking  #}
+     $(function parkingChart() {
+
+      var $parkingChart = $("#parking-chart");
+      $.ajax({
+        url: $parkingChart.data("url"),
+        success: function (data) {
+          var ctx = $parkingChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: '주차장수',
+                borderColor: '#0080ff',
+                  backgroundColor: '#0080ff',
+                  fill:false, // line의 아래쪽 색칠여부
+                data: data.data
+              }]
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Parking Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+    {# commute #}
+    $(function commuteChart() {
+      var i = 0;
+      var $commuteChart = $("#commute-chart");
+      {#alert('1')#}
+      $.ajax({
+        url: $commuteChart.data("url"),
+        success: function (data) {
+          var ctx = $commuteChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+                  data: {
+                      labels: data.labels,
+                      datasets: [
+                              {
+                                  label: '버스',
+                        data: data.bus,
+                        backgroundColor: '#E0E6F8',
+                      },
+                      {
+                          label: '지하철',
+                        data: data.trail,
+                        backgroundColor: '#A8DFF1',
+                      },
+                      {
+                          label: '버스+전철',
+                        data: data.bus_trail,
+                        backgroundColor: '#0080ff',
+                      },
+                          {
+                              label: '자가용 차',
+                        data: data.mycar,
+                        backgroundColor: '#0000FF',
+                      }
+                      ]
+                  },
+            options: {
+                scales: {
+            xAxes: [{
+                stacked: true
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        },
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: ' Commute Chart'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+
+
+
+
+  </script>
+
+{% endblock %}

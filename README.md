@@ -7,6 +7,7 @@
 DB로는 **AWS RDS**를 사용하였고 파일 저장소로 **AWS S3**를 사용하였습니다.   
 ---
 # 실행화면
+
 ![메인화면](https://user-images.githubusercontent.com/50395078/85916554-dcf1fc80-b88c-11ea-91c5-46a305d1569f.PNG)
 
 ![지도](https://user-images.githubusercontent.com/50395078/85916558-debbc000-b88c-11ea-91fa-12d68c854238.PNG)

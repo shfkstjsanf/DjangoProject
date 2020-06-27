@@ -13,8 +13,9 @@ DB로는 **AWS RDS**를 사용하였고 파일 저장소로 **AWS S3**를 사용
 
 ![문화](https://user-images.githubusercontent.com/50395078/85916555-dd8a9300-b88c-11ea-8693-35ec4a0afc6b.PNG)
 
+![차트](https://user-images.githubusercontent.com/50395078/85916552-dbc0cf80-b88c-11ea-8269-7ca26d8b81c7.PNG)
+
 ![분석](https://user-images.githubusercontent.com/50395078/85916557-de232980-b88c-11ea-8152-2d5511af3ac7.PNG)
 
-![차트](https://user-images.githubusercontent.com/50395078/85916552-dbc0cf80-b88c-11ea-8269-7ca26d8b81c7.PNG)
 
 
